@@ -27,7 +27,7 @@ console.log(typeof bigNumber);
 const heroes = ["shaktimaan", "naagraj", "doga"]
 
 let myObj = {
-    name: "Arpit"
+    name: "Arpit",
     age: 23,
 }
 
