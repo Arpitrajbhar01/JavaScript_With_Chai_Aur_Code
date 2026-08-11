@@ -1,0 +1,77 @@
+ARRAY METHODS: forEach vs filter vs map vs find
+=================================================
+(Hinglish Explanation + English Explanation)
+
+------------------------------------------------
+HINGLISH EXPLANATION
+------------------------------------------------
+
+Dekho, sabse badi confusion ye hoti hai ki log sochte hain "array ke
+andar string hai to forEach, object hai to filter" -- ye galat hai.
+Method choose karna array ke andar kya hai usse depend nahi karta,
+balki tumhe result mein kya chahiye usse depend karta hai.
+
+Bas ek simple sawaal khud se pucho:
+
+  "Mujhe is loop se WAPAS (return) kuch chahiye ya bas KAAM (action)
+   karna hai?"
+
+1. forEach -- bas kaam karna hai, wapas kuch nahi chahiye
+   Jaise tum sirf print karna chahte ho, ya kisi cheez ko update
+   karna chahte ho. Isse koi naya array nahi milta.
+
+   coding.forEach((lang) => console.log(lang)); // bas print kar diya
+
+2. filter -- chhaanna hai (kuch items nikalne hain jo condition
+   match kare)
+   Socho ek chhalni (sieve) -- jo cheez condition pe fit baithi
+   wahi nikal ke aayegi, baaki chhod di.
+
+   let history = books.filter((b) => b.genre === 'History');
+   // sirf History wali books
+
+3. map -- har item ko badalna/transform karna hai
+   Jitne items andar gaye utne hi bahar aayenge, bas roop badal ke.
+
+   let titles = books.map((b) => b.title);
+   // sirf titles ka naya array
+
+4. find -- sirf EK item chahiye (pehla jo match kare)
+
+   let book = books.find((b) => b.title === 'Book Three');
+   // ek hi object milega
+
+Yaad rakhne ka trick:
+   forEach = "kaam karo, kuch return mat karo"
+   filter  = "chhaano, jo fit ho wahi rakho"
+   map     = "sabko badlo, sabko rakho"
+   find    = "dhoondo, pehla mil gaya to bas"
+
+Agar tum "let x = arr.forEach(...)" likh rahe ho aur soch rahe ho x
+mein kuch useful milega -- wahi sabse bada sign hai ki tumhe map ya
+filter chahiye tha, forEach nahi.
+
+------------------------------------------------
+ENGLISH EXPLANATION
+------------------------------------------------
+
+The core mental model: don't think about the data type, think about
+your goal.
+
+Ask yourself one question before writing the loop:
+
+  "Do I need something back (a new array/value), or am I just
+   performing an action?"
+
+- Just an action, no return needed        -> forEach
+- Need a filtered subset                  -> filter
+- Need every item transformed             -> map
+- Need just one matching item             -> find
+- Need a yes/no answer                    -> some (any match?) /
+                                              every (all match?)
+
+Practice tip: Next time you write a loop, pause and ask "what do I
+want to end up with?" before picking the method. If the answer is
+"a new array" -> map or filter. If it's "just print/log/side-effect"
+-> forEach. If it's "one item" -> find. This habit alone will clear
+up 90% of the confusion.
