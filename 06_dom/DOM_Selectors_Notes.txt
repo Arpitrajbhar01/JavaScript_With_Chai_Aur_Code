@@ -1,0 +1,121 @@
+DOM SELECTORS - COMPLETE NOTES
+================================
+
+1. document.getElementById("id")
+---------------------------------
+- Return karta hai: single Element (ya null agar nahi mila)
+- Sirf ek hi element milta hai kyunki ID unique hoti hai page mein
+- Sabse fast selector hai performance ke hisaab se
+- Agar id nahi milti, toh null return hota hai (empty collection nahi)
+
+Example:
+document.getElementById("header")
+
+
+2. document.getElementsByClassName("class")
+--------------------------------------------
+- Return karta hai: HTMLCollection
+- Saare elements jisme wo class ho, chahe wo kahi bhi nested ho
+- Live collection - DOM change hote hi automatically update ho jaata hai
+- Multiple classes bhi de sakte ho (space se separate): getElementsByClassName("box active")
+- Array methods (map, filter) direct nahi chalenge - pehle Array.from() karna padega
+- forEach bhi direct nahi chalega
+
+Example:
+document.getElementsByClassName("card")
+
+
+3. document.getElementsByTagName("tag")
+------------------------------------------
+- Return karta hai: HTMLCollection
+- Saare elements jo us tag name ke ho (jaise saare <div>, saare <p>)
+- Ye bhi live hota hai
+- getElementsByTagName("*") likhne se saare elements mil jaate hain page ke
+
+Example:
+document.getElementsByTagName("p")
+
+
+4. document.getElementsByName("name")
+----------------------------------------
+- Return karta hai: NodeList
+- Ye un elements ko dhundta hai jinke name attribute mein wo value ho
+  (jyada tar form elements pe use hota hai - inputs, radio buttons)
+- Ye bhi live hota hai
+- Class ya tag selector se kam use hota hai, mostly forms mein
+
+Example:
+document.getElementsByName("gender")
+
+
+5. document.querySelector("CSS selector")
+--------------------------------------------
+- Return karta hai: single Element (pehla match), ya null agar kuch nahi mila
+- CSS selector syntax use hota hai - bahut powerful hai, kuch bhi select kar
+  sakte ho jo CSS se select hota hai
+- Jaise hi pehla matching element milta hai, wahi return ho jaata hai, baaki ignore
+- Static - ek baar call hone ke baad DOM change hone se ye khud update nahi
+  hota (kyunki ye ek element hai, koi collection nahi)
+
+Examples:
+document.querySelector(".card")       // pehla .card
+document.querySelector("#main p")     // #main ke andar pehla <p>
+document.querySelector("input[type=text]")
+
+
+6. document.querySelectorAll("CSS selector")
+------------------------------------------------
+- Return karta hai: NodeList
+- Saare matching elements milte hain us CSS selector se
+- CSS selector syntax use hota hai (class, id, attribute, combinator - sab chalega)
+- Static hota hai - DOM update hone par khud refresh nahi hota
+  (except childNodes wala case, jo alag topic hai)
+- .forEach() direct chalta hai isme
+- .map(), .filter() direct nahi chalte - Array.from() ya spread [...nodeList]
+  use karna padega
+
+Examples:
+document.querySelectorAll(".card")
+document.querySelectorAll("ul li")
+document.querySelectorAll("input, select")
+
+
+QUICK COMPARISON TABLE
+========================
+
+Selector                    | Return Type      | Live/Static | Match
+-----------------------------------------------------------------------
+getElementById               | Element (or null) | -           | Single
+getElementsByClassName       | HTMLCollection    | Live        | Multiple
+getElementsByTagName         | HTMLCollection    | Live        | Multiple
+getElementsByName            | NodeList          | Live        | Multiple
+querySelector                | Element (or null) | -           | Single (first match)
+querySelectorAll             | NodeList          | Static      | Multiple
+
+
+ENGLISH SUMMARY
+==================
+
+- getElementById returns a single Element by ID (or null), since IDs are
+  unique on a page. It's the fastest selector.
+
+- getElementsByClassName and getElementsByTagName both return a live
+  HTMLCollection - meaning the collection automatically updates when
+  matching elements are added/removed from the DOM afterward.
+
+- getElementsByName returns a live NodeList, mostly used for form elements
+  sharing the same name attribute.
+
+- querySelector returns only the first element matching a CSS selector
+  (or null if none found), and does not update after DOM changes since
+  it's a single reference.
+
+- querySelectorAll returns all matching elements as a static NodeList -
+  it does not auto-update when the DOM changes later (an exception is
+  childNodes, which is live, but that's not from querySelectorAll).
+
+- Both HTMLCollection and NodeList are array-like (have .length, indexable)
+  but are not real arrays. NodeList supports .forEach() directly;
+  HTMLCollection does not - convert either to a true array with
+  Array.from(collection) or [...collection] to use methods like .map()
+  and .filter().
