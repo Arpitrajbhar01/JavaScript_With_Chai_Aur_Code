@@ -1,0 +1,92 @@
+innerHTML vs innerText vs textContent - QUICK NOTES
+======================================================
+
+There are mainly 3 similar properties people confuse (plus one more
+advanced one - outerHTML). Let's cover all 4.
+
+
+1. innerHTML
+--------------
+Hinglish: Ye element ke andar ka poora HTML content deta hai (tags sahit).
+Agar set karo toh naye tags bhi render honge (jaise <b>, <div> waghera).
+
+English: Returns/sets the HTML markup inside an element, including tags.
+If you set it, any HTML tags in the string will be parsed and rendered
+as actual elements.
+
+Example:
+div.innerHTML   // "<b>Hello</b> World"
+div.innerHTML = "<i>New</i> Content"   // renders italic text
+
+WARNING - Security risk: User input ko directly innerHTML mein daalna
+XSS attack ka risk create karta hai.
+
+
+2. innerText
+--------------
+Hinglish: Ye sirf visible text deta hai, jo screen pe actually dikh
+raha ho. Hidden elements (display: none) ka text ignore kar deta hai.
+CSS ke hisaab se text ko style/format bhi karta hai (jaise line breaks).
+
+English: Returns only the visible, rendered text - respects CSS styling.
+Text inside elements with display: none is excluded. It's also slower
+because it triggers a reflow (browser recalculates layout to know what
+is visible).
+
+Example:
+div.innerText   // only visible text, no tags
+
+
+3. textContent
+----------------
+Hinglish: Ye saara text deta hai, chahe wo visible ho ya hidden
+(display: none wala bhi include hota hai). Tags nahi aate, sirf raw
+text milta hai. Ye innerText se fast hota hai kyunki CSS calculate
+nahi karta.
+
+English: Returns all text, including text inside hidden elements -
+ignores CSS/visibility entirely. Faster than innerText since it
+doesn't trigger a layout reflow. Safer than innerHTML for setting
+text (no HTML parsing, so no XSS risk).
+
+Example:
+div.textContent   // all text, hidden or not
+div.textContent = "Safe plain text"   // no HTML parsing, safe
+
+
+4. outerHTML
+--------------
+Hinglish: Ye element ke poore HTML including khud us element ka tag
+deta hai (innerHTML + element ka apna opening/closing tag).
+
+English: Returns the HTML of the element including the element's own
+tag itself, not just its contents.
+
+Example:
+// <div class="box">Hello</div>
+div.innerHTML   // "Hello"
+div.outerHTML   // "<div class="box">Hello</div>"
+
+
+QUICK COMPARISON TABLE
+=========================
+
+Property      | Includes Tags?     | Hidden Text?          | Speed          | Use Case
+---------------------------------------------------------------------------------------------------
+innerHTML     | Yes                | Yes                   | Medium         | Insert/read HTML markup
+innerText     | No                 | No (only visible)     | Slow (reflow)  | Get exactly what user sees
+textContent   | No                 | Yes                   | Fast           | Get/set plain text safely
+outerHTML     | Yes + own tag      | Yes                   | Medium         | Get/replace whole element incl. tag
+
+
+EASY RECALL TRICK
+====================
+
+- innerHTML   -> "HTML" naam mein hai, toh tags ke saath aata hai.
+- innerText   -> "visible" wala, jo dikh raha hai wahi milega, CSS follow karta hai.
+- textContent -> sabse fast + safe, sab text milta hai (hidden bhi), tags nahi.
+- outerHTML   -> innerHTML + apna khud ka tag bhi saath mein.
+
+One-liner to remember:
+innerHTML = tags + content | innerText = visible-only text |
+textContent = all text, fast & safe | outerHTML = innerHTML + the element's own tag
