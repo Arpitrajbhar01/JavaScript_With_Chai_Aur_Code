@@ -21,7 +21,7 @@ if (playGame) {
         console.log(guess);
         validateGuess(guess)
     } )
-}
+}         
 
 function validateGuess(guess){
     // 
