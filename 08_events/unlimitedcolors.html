@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlimited Colors</title>
+</head>
+<body>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+</body>
+<script>
+    const body = document.querySelector('body')
+    const start = document.querySelector('#start')
+    const stop = document.querySelector('#stop')
+    const max = 255;
+    const min = 0;
+    // console.log(randomNumber);
+    
+    const randomColor = function(){
+        const r = Math.floor(Math.random() * (max - min + 1)) + min;
+        const g = Math.floor(Math.random() * (max - min + 1)) + min;
+        const b = Math.floor(Math.random() * (max - min + 1)) + min;
+        return `rgb(${r}, ${g}, ${b})`
+    }
+    
+    let change = null
+
+//    start.addEventListener('click', function(){
+//     change = setInterval(function(){
+//         let Color = randomColor()
+//         body.style.backgroundColor = Color
+//     }, 1000)
+//    })
+
+//    stop.addEventListener('click', function(){
+//     clearInterval(change)
+//     change = null
+//    })
+
+// const startChangingColor = function (){
+//     body.style.backgroundColor = randomColor()
+// }
+
+// start.addEventListener('click', function(){
+//     change = setInterval(function(){
+//         startChangingColor()
+//         console.log('chal raha hun');
+//         console.log(change);
+//     }, 1000)
+// })
+
+// stop.addEventListener('click',function(){
+//     clearInterval(change)
+//     change = null
+//     console.log(change);
+//     console.log('band ho gya hun');
+    
+    
+// })
+
+let intervalId ;
+const startChangingColor = function (){
+    if (!intervalId) {
+        intervalId = setInterval(changeBgColor, 1000)
+    }
+
+    function changeBgColor() {
+        body.style.backgroundColor = randomColor()
+    }
+}
+
+const stopChangingColor = function () {
+    clearInterval(intervalId)
+    intervalId = null
+}
+
+start.addEventListener('click', startChangingColor)
+stop.addEventListener('click', stopChangingColor)
+</script>
+</html>
