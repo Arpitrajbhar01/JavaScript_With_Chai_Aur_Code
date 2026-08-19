@@ -1,0 +1,327 @@
+JAVASCRIPT PROMISES - HINGLISH NOTES
+==================================================
+
+1. PROMISE KYA HAI?
+------------------------------------------------
+Promise ek object hai jo represent karta hai kisi async task ka
+result - jaise DB calls, cryptography, ya network requests.
+Ye teen states me hota hai: pending, resolved (fulfilled), ya
+rejected.
+
+    const promiseOne = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            console.log('Async task is complete');
+            resolve()
+        }, 1000);
+    })
+
+    promiseOne.then(function(){
+        console.log('Promise consumed');
+    })
+
+Yaha setTimeout ek async task simulate kar raha hai. 1 second baad
+resolve() call hota hai, jisse promise "fulfilled" ho jata hai,
+aur uske baad .then() wala function chalta hai.
+
+2. PROMISE ANONYMOUSLY BHI BANA SAKTE HAIN
+------------------------------------------------
+Promise ko variable me store kiye bina bhi directly .then() chain
+kar sakte hain - jaise:
+
+    new Promise(function(resolve, reject){
+        setTimeout(function(){
+            console.log("Async task 2")
+            resolve()
+        }, 1000)
+    }).then(function(){
+        console.log("Async 2 resolved");
+    })
+
+3. RESOLVE ME DATA PASS KARNA
+------------------------------------------------
+resolve() ke andar hum data bhi pass kar sakte hain, jo .then()
+me argument ke roop me milta hai:
+
+    const promiseThree = new Promise(function(resolve, reject){
+        setTimeout(function(){
+            resolve({username: "chai", email: "chai@example.com"})
+        }, 1000)
+    })
+
+    promiseThree.then(function(user){
+        console.log(user);
+    })
+
+4. REJECT AUR ERROR HANDLING
+------------------------------------------------
+Agar kaam fail ho jaye to reject() call karte hain, jo .catch()
+me handle hota hai. .finally() hamesha chalta hai - chahe promise
+resolve ho ya reject.
+
+    const promiseFour = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            let error = false
+            if (!error) {
+                resolve({username: "Arpit", password: "123"})
+            } else {
+                reject('ERROR: Something went wrong')
+            }
+        }, 1000);
+    })
+
+    promiseFour
+        .then((user) => {
+            console.log(user);
+            return user.username
+        })
+        .then((username) => {
+            console.log(username);
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+        .finally(() => console.log("The Promise is either resolved or rejected"))
+
+Chaining important hai: ek .then() se return kiya hua value agle
+.then() me chala jata hai. Isse hum step-by-step data transform
+kar sakte hain.
+
+5. ASYNC/AWAIT - PROMISE KO SIMPLE TAREEKE SE HANDLE KARNA
+------------------------------------------------
+async/await, .then()/.catch() ka cleaner alternative hai. Function
+ke andar "async" keyword lagate hain, aur promise ko "await" karte
+hain - jisse code synchronous jaisa dikhta hai.
+
+    const promiseFive = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            let error = true
+            if (!error) {
+                resolve({username: "javascript", password: "123"})
+            } else {
+                reject('ERROR: JS went wrong')
+            }
+        }, 1000);
+    })
+
+    async function consumePromiseFive() {
+        try {
+            const response = await promiseFive
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    consumePromiseFive()
+
+Yaha error = true hai, isliye reject() chalega aur catch block me
+error print hoga. async/await ke sath try/catch use karna zaroori
+hai error handling ke liye - kyunki .catch() yaha available nahi
+hota.
+
+6. REAL WORLD EXAMPLE - FETCH API KE SATH ASYNC/AWAIT
+------------------------------------------------
+    async function getAllUsers() {
+        try {
+            const response = await fetch('https://randomuser.me/api/')
+            const data = await response.json()
+            console.log(data);
+        } catch (error) {
+            console.log("E: ", error);
+        }
+    }
+
+    getAllUsers()
+
+Fetch ek Promise return karta hai. Pehle await se response milta
+hai, fir response.json() se actual data milta hai - ye bhi ek
+async operation hai isliye isko bhi await karna padta hai.
+
+7. WAHI KAAM .then() CHAINING SE (BINA ASYNC/AWAIT)
+------------------------------------------------
+    fetch('https://randomuser.me/api/').then((Response) => {
+        return Response.json()
+    }).then((data) => {
+        console.log(data);
+    })
+    .catch((error) => console.log(error))
+
+Ye same fetch call hai, lekin async/await ke bajaye .then() chaining
+se likha gaya hai. Dono approach same kaam karte hain - async/await
+zyada readable hota hai, especially jab multiple async steps ho.
+
+SUMMARY / YAAD RAKHNE WALI BAATEIN
+------------------------------------------------
+- Promise = future me milne wala result (pending -> resolved/rejected)
+- .then() = success handle karta hai, .catch() = error handle karta hai
+- .finally() = hamesha chalta hai
+- async/await = .then()/.catch() ka clean alternative, try/catch ke
+  sath use hota hai
+- fetch() bhi Promise return karta hai, isliye await ya .then() dono
+  se consume kiya ja sakta hai
+-e 
+
+
+==================================================
+==================================================
+-e 
+
+JAVASCRIPT PROMISES - ENGLISH NOTES
+==================================================
+
+1. WHAT IS A PROMISE?
+------------------------------------------------
+A Promise is an object representing the eventual result of an
+async operation - like DB calls, cryptography, or network requests.
+It has three states: pending, resolved (fulfilled), or rejected.
+
+    const promiseOne = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            console.log('Async task is complete');
+            resolve()
+        }, 1000);
+    })
+
+    promiseOne.then(function(){
+        console.log('Promise consumed');
+    })
+
+Here, setTimeout simulates an async task. After 1 second, resolve()
+is called, which fulfills the promise, and the .then() callback runs.
+
+2. CREATING AND CONSUMING PROMISES ANONYMOUSLY
+------------------------------------------------
+A Promise doesn't need to be stored in a variable - you can chain
+.then() directly:
+
+    new Promise(function(resolve, reject){
+        setTimeout(function(){
+            console.log("Async task 2")
+            resolve()
+        }, 1000)
+    }).then(function(){
+        console.log("Async 2 resolved");
+    })
+
+3. PASSING DATA THROUGH RESOLVE
+------------------------------------------------
+You can pass data through resolve(), which becomes available as an
+argument in .then():
+
+    const promiseThree = new Promise(function(resolve, reject){
+        setTimeout(function(){
+            resolve({username: "chai", email: "chai@example.com"})
+        }, 1000)
+    })
+
+    promiseThree.then(function(user){
+        console.log(user);
+    })
+
+4. REJECT AND ERROR HANDLING
+------------------------------------------------
+If the task fails, reject() is called, which is caught by .catch().
+.finally() always runs regardless of whether the promise resolved
+or rejected.
+
+    const promiseFour = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            let error = false
+            if (!error) {
+                resolve({username: "Arpit", password: "123"})
+            } else {
+                reject('ERROR: Something went wrong')
+            }
+        }, 1000);
+    })
+
+    promiseFour
+        .then((user) => {
+            console.log(user);
+            return user.username
+        })
+        .then((username) => {
+            console.log(username);
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+        .finally(() => console.log("The Promise is either resolved or rejected"))
+
+Chaining matters here: whatever value one .then() returns gets
+passed into the next .then(). This allows step-by-step data
+transformation.
+
+5. ASYNC/AWAIT - A CLEANER WAY TO HANDLE PROMISES
+------------------------------------------------
+async/await is a cleaner alternative to .then()/.catch(). Adding
+the "async" keyword to a function lets you "await" a promise inside
+it, making the code look synchronous.
+
+    const promiseFive = new Promise(function(resolve, reject){
+        setTimeout(() => {
+            let error = true
+            if (!error) {
+                resolve({username: "javascript", password: "123"})
+            } else {
+                reject('ERROR: JS went wrong')
+            }
+        }, 1000);
+    })
+
+    async function consumePromiseFive() {
+        try {
+            const response = await promiseFive
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    consumePromiseFive()
+
+Since error = true here, reject() runs and the catch block logs the
+error. Using try/catch with async/await is essential for error
+handling, since .catch() chaining isn't available in this style.
+
+6. REAL-WORLD EXAMPLE - FETCH API WITH ASYNC/AWAIT
+------------------------------------------------
+    async function getAllUsers() {
+        try {
+            const response = await fetch('https://randomuser.me/api/')
+            const data = await response.json()
+            console.log(data);
+        } catch (error) {
+            console.log("E: ", error);
+        }
+    }
+
+    getAllUsers()
+
+fetch() returns a Promise. First we await the response, then
+response.json() (also an async operation) needs to be awaited too,
+to get the actual parsed data.
+
+7. THE SAME LOGIC USING .then() CHAINING (WITHOUT ASYNC/AWAIT)
+------------------------------------------------
+    fetch('https://randomuser.me/api/').then((Response) => {
+        return Response.json()
+    }).then((data) => {
+        console.log(data);
+    })
+    .catch((error) => console.log(error))
+
+This is the same fetch call, written using .then() chaining instead
+of async/await. Both approaches do the same thing - async/await is
+generally more readable, especially with multiple async steps.
+
+SUMMARY / KEY TAKEAWAYS
+------------------------------------------------
+- Promise = a value that will be available in the future
+  (pending -> resolved/rejected)
+- .then() handles success, .catch() handles errors
+- .finally() always runs regardless of outcome
+- async/await is a cleaner alternative to .then()/.catch(), used
+  with try/catch for error handling
+- fetch() also returns a Promise, so it can be consumed with either
+  await or .then()
